@@ -1,0 +1,88 @@
+@using System.Linq
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </h1>
+
+    <!-- Dashboard Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-hamburger"></i>
+                </div>
+                <div class="card-title">Total Menu Items</div>
+                <div class="card-value">@Model.TotalMenuItems</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="dashboard-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                <div class="card-icon">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="card-title">Total Orders</div>
+                <div class="card-value">@Model.TotalOrders</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="dashboard-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+               <div class="card-icon">
+<i class="fa fa-inr" aria-hidden="true"></i>                </div>
+                <div class="card-title">Total Sales</div>
+                <div class="card-value">@Model.TotalSales.ToString("C")</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="dashboard-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="card-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="card-title">Today's Orders</div>
+                <div class="card-value">@Model.TodayOrders</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Stats -->
+    <div class="row mb-4">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chair"></i> Table Status
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <h4 class="text-success">@Model.AvailableTables</h4>
+                            <p class="mb-0">Available Tables</p>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h4 class="text-danger">@Model.OccupiedTables</h4>
+                            <p class="mb-0">Occupied Tables</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-dollar-sign"></i> Today's Sales
+                </div>
+                <div class="card-body text-center">
+                    <h3 class="text-primary">@Model.TodaySales.ToString("C")</h3>
+                    <p class="mb-0">Revenue Generated Today</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

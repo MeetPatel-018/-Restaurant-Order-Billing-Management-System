@@ -1,0 +1,181 @@
+@model RestaurantManagementSystem.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Admin")" style="color: rgba(255, 255, 255, 0.8);">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: white;">Dashboard</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4 fade-in-up">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="card-title">Total Menu Items</div>
+                <div class="card-value">@Model.TotalMenuItems</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="card-title">Total Orders</div>
+                <div class="card-value">@Model.TotalOrders</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                            <i class="fa fa-inr" aria-hidden="true"></i> 
+                </div>                <div class="card-title">Total Sales</div>
+                <div class="card-value">@Model.TotalSales.ToString("C")</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="card-title">Today's Orders</div>
+                <div class="card-value">@Model.TodayOrders</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Statistics -->
+    <div class="row mb-4">
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Orders</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <span class="text-success font-weight-bold">Available Tables:</span>
+                                <span class="ml-2">@Model.AvailableTables</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="text-warning font-weight-bold">Occupied Tables:</span>
+                                <span class="ml-2">@Model.OccupiedTables</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <span class="text-info font-weight-bold">Today's Sales:</span>
+                                <span class="ml-2">₹@Model.TodaySales.ToString("F2")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 mb-2">
+                            <a href="@Url.Action("CreateOrder", "Admin")" class="btn btn-teal btn-block">
+                                <i class="fas fa-plus"></i> New Order
+                            </a>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <a href="@Url.Action("Create", "Category")" class="btn btn-teal btn-block">
+                                <i class="fas fa-plus"></i> Add Category
+                            </a>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <a href="@Url.Action("CreateMenuItem", "Admin")" class="btn btn-teal btn-block">
+                                <i class="fas fa-plus"></i> Add Menu Item
+                            </a>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <a href="@Url.Action("Create", "Table")" class="btn btn-teal btn-block">
+                                <i class="fas fa-plus"></i> Add Table
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Recent Orders</h6>
+        </div>
+        <div class="card-body">
+            @if (Model.RecentOrders != null && Model.RecentOrders.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Table</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.RecentOrders)
+                            {
+                                <tr>
+                                    <td>@order.OrderID</td>
+                                    <td>@order.Table?.TableNumber</td>
+                                    <td>@order.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
+                                   <td>
+    <span class="badge @(order.OrderStatus == "Completed" ? "bg-success" :
+                         order.OrderStatus == "Pending" ? "bg-warning text-dark" :
+                         "bg-danger")">
+        @order.OrderStatus
+    </span>
+</td>
+                                    <td>₹@order.TotalAmount.ToString("F2")</td>
+                                    <td>
+                                        <a href="@Url.Action("Details", "Order", new { id = order.OrderID })" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-3">
+                    <i class="fas fa-receipt fa-3x text-gray-300 mb-3"></i>
+                    <p class="text-gray-500">No recent orders found</p>
+                    <a href="@Url.Action("CreateOrder", "Admin")" class="btn btn-teal">
+                        <i class="fas fa-plus"></i> Create First Order
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

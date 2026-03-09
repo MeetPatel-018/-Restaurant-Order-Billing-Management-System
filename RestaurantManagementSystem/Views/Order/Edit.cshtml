@@ -1,0 +1,152 @@
+@model RestaurantManagementSystem.Models.Order
+@{
+    ViewData["Title"] = "Edit Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+@if (Model == null)
+{
+    <div class="alert alert-danger">
+        <h4>Order not found</h4>
+        <p>The requested order could not be found.</p>
+        <a href="/Order" class="btn btn-primary">Back to Orders</a>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-edit"></i> Edit Order
+        </h1>
+        <a href="/Order" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-receipt"></i> Order Details
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <input type="hidden" asp-for="OrderID" />
+                <input type="hidden" asp-for="TotalAmount" />
+                <input type="hidden" asp-for="OrderDate" />
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="TableID" class="form-label">Table</label>
+                            <div class="mb-3">
+                                <label asp-for="TableID" class="form-label">Table</label>
+                                <input type="text" asp-for="TableID" class="form-control" readonly />
+                                <span asp-validation-for="TableID" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="OrderStatus" class="form-label">Order Status</label>
+
+                            <select asp-for="OrderStatus" class="form-control">
+                                <option value="Pending">Pending</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+
+                            <span asp-validation-for="OrderStatus" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h4>Order Items</h4>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover">
+
+                                <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    @if (Model.OrderItems != null && Model.OrderItems.Any())
+                                    {
+                                        foreach (var item in Model.OrderItems)
+                                        {
+                                            <tr>
+                                                <td>@item.MenuItem?.ItemName</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.Price.ToString("C")</td>
+                                                <td>
+                                                    <strong>@item.SubTotal.ToString("C")</strong>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4" class="text-center">
+                                                No order items found.
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h4>Total Amount</h4>
+                        <h3 class="text-primary">
+                            @Model.TotalAmount.ToString("C")
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+
+                    <a href="/Order" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+}
+
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

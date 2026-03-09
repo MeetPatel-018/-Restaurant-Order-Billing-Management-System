@@ -1,0 +1,105 @@
+@model RestaurantManagementSystem.Models.MenuItem
+@{
+    ViewData["Title"] = "Menu Item Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-info-circle"></i> Menu Item Details
+        </h1>
+        <div>
+            <a href="/Menu/Edit/@Model.ItemID" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="/Menu" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-hamburger"></i> Item Information
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td style="width: 150px;"><strong>Item ID:</strong></td>
+                            <td>@Model.ItemID</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Item Name:</strong></td>
+                            <td>@Model.ItemName</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Category:</strong></td>
+                            <td>
+                                <span class="badge bg-secondary">@Model.Category?.CategoryName</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Price:</strong></td>
+                            <td><h4 class="text-success">@Model.Price.ToString("C")</h4></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status:</strong></td>
+                            <td>
+                                <span class="status-badge status-@Model.Status.ToLower()">
+                                    @Model.Status
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Description:</strong></td>
+                            <td>@(string.IsNullOrEmpty(Model.Description) ? "No description available" : Model.Description)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie"></i> Quick Actions
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/Menu/Edit/@Model.ItemID" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit Item
+                        </a>
+                        <a href="/Menu/ToggleStatus/@Model.ItemID" class="btn btn-info">
+                            <i class="fas fa-toggle-on"></i> Toggle Status
+                        </a>
+                        <a href="/Menu/Delete/@Model.ItemID" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete Item
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-info"></i> Item Status
+                </div>
+                <div class="card-body text-center">
+                    @if (Model.Status == "Available")
+                    {
+                        <i class="fas fa-check-circle fa-3x text-success mb-2"></i>
+                        <h5 class="text-success">Available</h5>
+                        <p class="text-muted">This item can be ordered</p>
+                    }
+                    else
+                    {
+                        <i class="fas fa-times-circle fa-3x text-danger mb-2"></i>
+                        <h5 class="text-danger">Not Available</h5>
+                        <p class="text-muted">This item cannot be ordered</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

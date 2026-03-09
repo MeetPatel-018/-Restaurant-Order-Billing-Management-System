@@ -1,0 +1,124 @@
+@model RestaurantManagementSystem.Models.MenuItem
+@{
+    ViewData["Title"] = "Create Menu Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-plus"></i> Create Menu Item
+        </h1>
+        <a href="/Menu" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-hamburger"></i> Menu Item Details
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="ItemName" class="form-label">Item Name</label>
+                            <input asp-for="ItemName" class="form-control" placeholder="Enter item name" />
+                            <span asp-validation-for="ItemName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="CategoryID" class="form-label">Category</label>
+                            <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.Categories">
+                                <option value="">-- Select Category --</option>
+                            </select>
+                            <span asp-validation-for="CategoryID" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label">Price</label>
+                            <input asp-for="Price" class="form-control" type="number" step="0.01" min="0.01" placeholder="0.00" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label">Status</label>
+                            <select asp-for="Status" class="form-control">
+                                <option value="Available">Available</option>
+                                <option value="Unavailable">Unavailable</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter item description"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create Menu Item
+                    </button>
+                    <a href="/Menu" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        console.log("Menu Create page loaded");
+        
+        document.querySelector('form').addEventListener('submit', function(e) {
+            console.log("Form submit button clicked");
+            console.log("Form data before submit:");
+            
+            const formData = new FormData(this);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            
+            // Check form validation
+            const itemName = document.querySelector('input[name="ItemName"]').value;
+            const categoryId = document.querySelector('select[name="CategoryID"]').value;
+            const price = document.querySelector('input[name="Price"]').value;
+            
+            console.log(`ItemName: "${itemName}"`);
+            console.log(`CategoryID: ${categoryId}`);
+            console.log(`Price: ${price}`);
+            
+            if (!itemName) {
+                console.log("ERROR: ItemName is empty");
+                e.preventDefault();
+            }
+            if (!categoryId) {
+                console.log("ERROR: CategoryID is not selected");
+                e.preventDefault();
+            }
+            if (!price || price <= 0) {
+                console.log("ERROR: Price is invalid");
+                e.preventDefault();
+            }
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

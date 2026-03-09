@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Categories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-tags"></i> Categories
+        </h1>
+        <a href="@Url.Action("Create", "Category")" class="btn btn-teal">
+            <i class="fas fa-plus"></i> Add New Category
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-list"></i> All Categories
+        </div>
+        <div class="card-body">
+            @if (Model != null && Model.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Category ID</th>
+                                <th>Category Name</th>
+                                <th>Menu Items Count</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var category in Model)
+                            {
+                                <tr>
+                                    <td>@category.CategoryID</td>
+                                    <td>
+                                        <strong>@category.CategoryName</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            @(category.MenuItems?.Count ?? 0) items
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="/Category/Details/@category.CategoryID" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="/Category/Edit/@category.CategoryID" class="btn btn-sm btn-outline-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="/Category/Delete/@category.CategoryID" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4">
+                    <i class="fas fa-tags fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No categories found.</p>
+                    <a href="/Category/Create" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add First Category
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

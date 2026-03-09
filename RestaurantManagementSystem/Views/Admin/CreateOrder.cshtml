@@ -1,0 +1,117 @@
+@model RestaurantManagementSystem.Models.OrderViewModel
+@{
+    ViewData["Title"] = "Create Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-plus"></i> Create Order
+        </h1>
+        <a href="/Admin" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-shopping-cart"></i> Order Details
+        </div>
+        <div class="card-body">
+            <form asp-action="CreateOrder">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label asp-for="TableID" class="form-label">Table</label>
+                            <select asp-for="TableID" class="form-control" required>
+                                <option value="">-- Select Table --</option>
+                                @foreach (var table in Model.AvailableTables)
+                                {
+                                    <option value="@table.TableID">@table.TableNumber (@table.Capacity seats)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="TableID" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4><i class="fas fa-hamburger"></i> Menu Items</h4>
+                        @if (Model.AvailableMenuItems != null && Model.AvailableMenuItems.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Name</th>
+                                            <th>Category</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.AvailableMenuItems.Count; i++)
+                                        {
+                                            var item = Model.AvailableMenuItems[i];
+                                            <tr>
+                                                <td>
+                                                    @item.ItemName
+                                                    <input type="hidden" name="OrderItems[@i].ItemID" value="@item.ItemID" />
+                                                </td>
+                                                <td>@item.CategoryName</td>
+                                                <td>@item.Price.ToString("C")</td>
+                                                <td>
+                                                    <input type="number" name="OrderItems[@i].Quantity" class="form-control" min="0" max="99" value="0" style="width: 80px;" />
+                                                </td>
+                                                <td id="subtotal_@i">₹0.00</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i> No menu items available.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create Order
+                    </button>
+                    <a href="/Admin" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const prices = [@Html.Raw(string.Join(",", Model.AvailableMenuItems.Select(x => x.Price)))];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const quantityInputs = document.querySelectorAll('input[name^="OrderItems"]');
+            quantityInputs.forEach((input, index) => {
+                input.addEventListener('change', function() {
+                    const quantity = parseInt(this.value) || 0;
+                    const price = prices[index];
+                    const subtotal = price * quantity;
+                    document.getElementById('subtotal_' + index).textContent = '$' + subtotal.toFixed(2);
+                });
+            });
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

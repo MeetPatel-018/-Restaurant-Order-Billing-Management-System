@@ -1,0 +1,165 @@
+@{
+    ViewData["Title"] = "Sales Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">
+        <i class="fas fa-chart-bar"></i> Sales Report
+    </h1>
+
+    <!-- Daily Sales Report -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-calendar-day"></i> Daily Sales (Last 7 Days)
+        </div>
+        <div class="card-body">
+            @if (ViewBag.DailySales != null)
+            {
+                var dailySales = ViewBag.DailySales as IEnumerable<dynamic>;
+                if (dailySales != null && dailySales.Any())
+                {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Orders</th>
+                                <th>Total Sales</th>
+                                <th>Average Order Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in dailySales)
+                            {
+                                <tr>
+                                    <td>@item.Date.ToString("dd MMM yyyy")</td>
+                                    <td>@item.OrderCount</td>
+                                    <td>@((decimal)item.TotalSales).ToString("C")</td>
+                                    <td>@(((decimal)item.TotalSales / item.OrderCount).ToString("C"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Simple Chart Representation -->
+                <div class="mt-4">
+                    <h6>Daily Sales Trend</h6>
+                    <div class="progress" style="height: 30px;">
+                        @{
+                            var maxSales = dailySales.Max(d => (decimal)d.TotalSales);
+                        }
+                        @foreach (var item in dailySales)
+                        {
+                            var percentage = (decimal)item.TotalSales / maxSales * 100;
+                            <div class="progress-bar bg-primary" style="width: @percentage.ToString("0.##")%"
+                                 title="@item.Date.ToString("dd MMM"): @((decimal)item.TotalSales).ToString("C")">
+                                @((decimal)item.TotalSales).ToString("C0")
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4">
+                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No sales data available for the last 7 days.</p>
+                </div>
+            }
+            }
+        </div>
+    </div>
+
+    <!-- Monthly Sales Report -->
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-calendar-alt"></i> Monthly Sales (@DateTime.Now.Year)
+        </div>
+        <div class="card-body">
+            @if (ViewBag.MonthlySales != null)
+            {
+                var monthlySales = ViewBag.MonthlySales as IEnumerable<dynamic>;
+                if (monthlySales != null && monthlySales.Any())
+                {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Orders</th>
+                                <th>Total Sales</th>
+                                <th>Average Order Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.MonthlySales)
+                            {
+                                <tr>
+                                    <td>@item.MonthName @item.Year</td>
+                                    <td>@item.OrderCount</td>
+                                    <td>@((decimal)item.TotalSales).ToString("C")</td>
+                                    <td>@(((decimal)item.TotalSales / item.OrderCount).ToString("C"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            @{
+                                var totalOrders = 0;
+                                var totalSales = 0m;
+                                foreach (var item in monthlySales)
+                                {
+                                    totalOrders += (int)item.OrderCount;
+                                    totalSales += (decimal)item.TotalSales;
+                                }
+                            }
+                            <tr class="table-primary font-weight-bold">
+                                <td>Total</td>
+                                <td>@totalOrders</td>
+                                <td>@totalSales.ToString("C")</td>
+                                <td>@(totalOrders > 0 ? (totalSales / totalOrders).ToString("C") : "₹0.00")</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- Monthly Sales Summary -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h4>@totalOrders</h4>
+                                <p class="mb-0">Total Orders This Year</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h4>@totalSales.ToString("C")</h4>
+                                <p class="mb-0">Total Revenue This Year</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h4>@(totalOrders > 0 ? (totalSales / totalOrders).ToString("C") : "₹0.00")</h4>
+                                <p class="mb-0">Average Order Value</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            }
+            else
+            {
+                <div class="text-center py-4">
+                    <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No sales data available for @DateTime.Now.Year.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

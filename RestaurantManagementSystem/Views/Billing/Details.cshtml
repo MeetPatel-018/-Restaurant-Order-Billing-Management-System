@@ -1,0 +1,256 @@
+@model RestaurantManagementSystem.Models.Bill
+@{
+    ViewData["Title"] = "Bill Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-file-invoice"></i> Bill Details
+        </h1>
+        <div>
+            <a href="/Billing/PrintBill/@Model.BillID" class="btn btn-info" target="_blank">
+                <i class="fas fa-print"></i> Print Bill
+            </a>
+            <a href="/Billing" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-receipt"></i> Bill Information
+                </div>
+                <div class="card-body">
+                    @if (Model.Order?.OrderStatus == "Cancelled")
+                    {
+                        <div class="alert alert-danger text-center">
+                            <i class="fas fa-times-circle fa-3x mb-3"></i>
+                            <h4>Order Was Cancelled</h4>
+                            <p class="mb-0">This order was cancelled and no bill details are available.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td style="width: 150px;"><strong>Bill ID:</strong></td>
+                                        <td><h4>#@Model.BillID</h4></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Order Status:</strong></td>
+                                        <td>
+                                            <span class="badge @(Model.Order?.OrderStatus == "Completed" ? "bg-success" :
+                                                             Model.Order?.OrderStatus == "Pending" ? "bg-warning text-dark" :
+                                                             "bg-danger")">
+                                                @(Model.Order?.OrderStatus ?? "Unknown")
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Order ID:</strong></td>
+                                        <td>#@Model.OrderID</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Table:</strong></td>
+                                        <td>@Model.Order?.Table?.TableNumber</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Bill Date:</strong></td>
+                                        <td>@Model.BillDate.ToString("dd MMM yyyy hh:mm tt")</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td style="width: 150px;"><strong>Payment Method:</strong></td>
+                                        <td>
+                                            <span class="badge bg-secondary">@Model.PaymentMethod</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Subtotal:</strong></td>
+                                        <td>@Model.SubTotal.ToString("C")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Tax:</strong></td>
+                                        <td>@Model.Tax.ToString("C")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Final Amount:</strong></td>
+                                        <td><h3 class="text-success">@Model.FinalAmount.ToString("C")</h3></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (Model.Order?.OrderStatus != "Cancelled")
+            {
+            <div class="card mt-4">
+                <div class="card-header">
+                    <i class="fas fa-list"></i> Order Items
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Order.OrderItems)
+                                {
+                                    var calculatedSubTotal = item.Quantity * item.Price;
+                                    <tr>
+                                        <td>@item.MenuItem?.ItemName</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@item.Price.ToString("C")</td>
+                                        <td><strong>@calculatedSubTotal.ToString("C")</strong></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3">Subtotal:</th>
+                                    <th>@Model.SubTotal.ToString("C")</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3">Tax:</th>
+                                    <th>@Model.Tax.ToString("C")</th>
+                                </tr>
+                                <tr class="table-success">
+                                    <th colspan="3">Final Amount:</th>
+                                    <th>@Model.FinalAmount.ToString("C")</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        @if (Model.Order?.OrderStatus != "Cancelled")
+        {
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie"></i> Quick Actions
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/Billing/PrintBill/@Model.BillID" class="btn btn-info" target="_blank">
+                            <i class="fas fa-print"></i> Print Bill
+                        </a>
+                        <a href="/Order/Details/@Model.OrderID" class="btn btn-primary">
+                            <i class="fas fa-receipt"></i> View Order
+                        </a>
+                        <a href="/Billing/Delete/@Model.BillID" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete Bill
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-info"></i> Payment Information
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Payment Status:</strong></td>
+                                <td><span class="badge bg-success">Paid</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payment Date:</strong></td>
+                                <td>@Model.BillDate.ToString("dd MMM yyyy")</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        else
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-info"></i> Order Information
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Order ID:</strong></td>
+                                    <td>#@Model.OrderID</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Table:</strong></td>
+                                    <td>@Model.Order?.Table?.TableNumber</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Order Date:</strong></td>
+                                    <td>@Model.Order?.OrderDate.ToString("dd MMM yyyy")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td><span class="badge bg-danger">Cancelled</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="d-grid gap-2 mt-3">
+                            <a href="/Order/Details/@Model.OrderID" class="btn btn-primary">
+                                <i class="fas fa-receipt"></i> View Order Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-md-4">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-calculator"></i> Tax Breakdown
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tr>
+                            <td>Subtotal:</td>
+                            <td class="text-end">@Model.SubTotal.ToString("C")</td>
+                        </tr>
+                        <tr>
+                            <td>Tax Rate:</td>
+                            <td class="text-end">@((Model.Tax / Model.SubTotal * 100).ToString("0.##"))%</td>
+                        </tr>
+                        <tr>
+                            <td>Tax Amount:</td>
+                            <td class="text-end">@Model.Tax.ToString("C")</td>
+                        </tr>
+                        <tr class="table-success">
+                            <td><strong>Total:</strong></td>
+                            <td class="text-end"><strong>@Model.FinalAmount.ToString("C")</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

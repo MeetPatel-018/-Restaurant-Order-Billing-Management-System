@@ -1,0 +1,178 @@
+@model RestaurantManagementSystem.Models.Order
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-info-circle"></i> Order Details
+        </h1>
+        <div>
+            <a href="/Order" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-receipt"></i> Order Information
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td style="width: 150px;"><strong>Order ID:</strong></td>
+                                    <td><h4>#@Model.OrderID</h4></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Table:</strong></td>
+                                    <td>@Model.Table?.TableNumber</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date & Time:</strong></td>
+                                    <td>@Model.OrderDate.ToString("dd MMM yyyy hh:mm tt")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td>
+                                        <span class="status-badge status-@Model.OrderStatus.ToLower()">
+                                            @Model.OrderStatus
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td style="width: 150px;"><strong>Total Amount:</strong></td>
+                                    <td><h3 class="text-success">@Model.TotalAmount.ToString("C")</h3></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Items Count:</strong></td>
+                                    <td>@Model.OrderItems.Count items</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bill Status:</strong></td>
+                                    <td>
+                                        @if (Model.Bill != null)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> Billed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock"></i> Pending
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <i class="fas fa-list"></i> Order Items
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                    <tr>
+                                        <td>@item.MenuItem?.ItemName</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@item.Price.ToString("C")</td>
+                                        <td><strong>@item.SubTotal.ToString("C")</strong></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <th colspan="3">Total Amount:</th>
+                                    <th>@Model.TotalAmount.ToString("C")</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie"></i> Quick Actions
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        @if (Model.OrderStatus == "Pending" && Model.Bill == null)
+                        {
+                            <a href="/Billing/GenerateBill?orderId=@Model.OrderID" class="btn btn-success">
+                                <i class="fas fa-file-invoice"></i> Generate Bill
+                            </a>
+                        }
+                        @if (Model.Bill != null)
+                        {
+                            <a href="/Billing/Details/@Model.Bill.BillID" class="btn btn-info">
+                                <i class="fas fa-receipt"></i> View Bill
+                            </a>
+                            <a href="/Billing/PrintBill/@Model.Bill.BillID" class="btn btn-outline-primary" target="_blank">
+                                <i class="fas fa-print"></i> Print Bill
+                            </a>
+                        }
+                        <a href="/Order/Delete/@Model.OrderID" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete Order
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <i class="fas fa-info"></i> Order Status
+                </div>
+                <div class="card-body text-center">
+                    @switch (Model.OrderStatus)
+                    {
+                        case "Pending":
+                            <i class="fas fa-clock fa-3x text-warning mb-2"></i>
+                            <h5 class="text-warning">Pending</h5>
+                            <p class="text-muted">Order is being processed</p>
+                            break;
+                        case "Completed":
+                            <i class="fas fa-check-circle fa-3x text-success mb-2"></i>
+                            <h5 class="text-success">Completed</h5>
+                            <p class="text-muted">Order has been completed</p>
+                            break;
+                        case "Cancelled":
+                            <i class="fas fa-times-circle fa-3x text-danger mb-2"></i>
+                            <h5 class="text-danger">Cancelled</h5>
+                            <p class="text-muted">Order was cancelled</p>
+                            break;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

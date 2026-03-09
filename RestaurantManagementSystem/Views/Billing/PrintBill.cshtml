@@ -1,0 +1,154 @@
+@model RestaurantManagementSystem.Models.Bill
+@{
+    ViewData["Title"] = "Print Bill";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Bill #@Model.BillID</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            font-size: 14px;
+        }
+        .bill-header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .bill-header h1 {
+            margin: 0;
+            color: #333;
+        }
+        .bill-info {
+            margin-bottom: 20px;
+        }
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .bill-table th, .bill-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .bill-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .bill-table .text-right {
+            text-align: right;
+        }
+        .bill-total {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .bill-footer {
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .no-print {
+            display: none;
+        }
+        @@media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bill-header">
+        <h1>Restaurant Management System</h1>
+        <p>123 Restaurant Street, City, State</p>
+        <p>Phone: (123) 456-7890</p>
+        <hr>
+        <h2>BILL #@Model.BillID</h2>
+    </div>
+
+    <div class="bill-info">
+        <table class="bill-table">
+            <tr>
+                <td><strong>Order ID:</strong></td>
+                <td>#@Model.OrderID</td>
+                <td><strong>Table:</strong></td>
+                <td>@Model.Order?.Table?.TableNumber</td>
+            </tr>
+            <tr>
+                <td><strong>Bill Date:</strong></td>
+                <td>@Model.BillDate.ToString("dd MMM yyyy hh:mm tt")</td>
+                <td><strong>Payment Method:</strong></td>
+                <td>@Model.PaymentMethod</td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>Order Items</h3>
+    <table class="bill-table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th class="text-right">Unit Price</th>
+                <th class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Order.OrderItems)
+            {
+                <tr>
+                    <td>@item.MenuItem?.ItemName</td>
+                    <td>@item.Quantity</td>
+                    <td class="text-right">@item.Price.ToString("C")</td>
+                    <td class="text-right">@item.SubTotal.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right"><strong>Subtotal:</strong></td>
+                <td class="text-right">@Model.SubTotal.ToString("C")</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right"><strong>Tax:</strong></td>
+                <td class="text-right">@Model.Tax.ToString("C")</td>
+            </tr>
+            <tr class="bill-total">
+                <td colspan="3" class="text-right"><strong>Final Amount:</strong></td>
+                <td class="text-right">@Model.FinalAmount.ToString("C")</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="bill-footer">
+        <p><strong>Thank you for dining with us!</strong></p>
+        <p>Please come again soon.</p>
+        <p>Generated on: @DateTime.Now.ToString("dd MMM yyyy hh:mm tt")</p>
+    </div>
+
+    <div class="no-print" style="margin-top: 20px; text-align: center;">
+        <button onclick="window.print()" class="btn btn-primary">
+            <i class="fas fa-print"></i> Print Bill
+        </button>
+        <button onclick="window.close()" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Close
+        </button>
+    </div>
+
+    <script>
+        // Auto-print when page loads
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        };
+    </script>
+</body>
+</html>

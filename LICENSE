@@ -1,0 +1,54 @@
+# MIT License
+
+Copyright (c) 2024 Restaurant Management System
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies
+or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
+
+## 📋 **Summary**
+
+This license permits:
+- ✅ **Commercial use** - Use in commercial restaurant operations
+- ✅ **Modification** - Customize and extend functionality
+- ✅ **Distribution** - Share with others
+- ✅ **Private use** - Use for personal restaurant management
+- ✅ **Sublicensing** - Create derivative works
+- ✅ **No warranty** - Use at your own risk
+
+## 🔒 **Limitations**
+
+- ❌ **No liability** - Authors not responsible for damages
+- ❌ **No warranty** - Software provided as-is
+- ❌ **No support** - No guaranteed technical support
+- ❌ **No trademark** - No exclusive rights granted
+
+## 👥 **Attribution**
+
+Please include the following attribution when using this software:
+```
+Restaurant Order & Billing Management System
+Licensed under MIT License
+https://github.com/yourusername/restaurant-order-billing-system
+```
+
+## 📞 **Contact**
+
+For questions about this license:
+- **Email**: license@restaurant-system.com
+- **GitHub**: Create issue in repository
+- **Website**: www.restaurant-system.com

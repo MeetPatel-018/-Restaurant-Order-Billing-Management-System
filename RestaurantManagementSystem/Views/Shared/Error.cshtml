@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger shadow">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Oops! Something Went Wrong
+                    </h4>
+                </div>
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-bug fa-4x text-danger"></i>
+                    </div>
+                    <h5 class="text-danger mb-3">We encountered an unexpected error</h5>
+                    <p class="text-muted mb-4">
+                        @ViewData["ErrorMessage"]?.ToString() ?? "Something went wrong. Please try again."
+                    </p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Go Back
+                        </a>
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                            <i class="fas fa-home me-2"></i>Go to Dashboard
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer text-center text-muted small">
+                    <p class="mb-0">Error Code: @ViewData["ErrorCode"]?.ToString() ?? "500"</p>
+                    <p class="mb-0">If this problem persists, please contact support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Log client-side errors
+        window.addEventListener('error', function(e) {
+            console.error('Client-side error:', e.error);
+        });
+    </script>
+}
