@@ -47,7 +47,7 @@
                                     </td>
                                     <td><strong>@item.Price.ToString("C")</strong></td>
                                     <td>
-                                        <span class="status-badge status-@item.Status.ToLower()">
+                                        <span class="status-badge status-@(item.Status == "Available" ? "available" : "not-available")">
                                             @item.Status
                                         </span>
                                     </td>
@@ -60,9 +60,11 @@
                                             <a href="/Menu/Edit/@item.ItemID" class="btn btn-sm btn-outline-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="/Menu/ToggleStatus/@item.ItemID" class="btn btn-sm btn-outline-info">
-                                                <i class="fas fa-toggle-on"></i>
-                                            </a>
+                                            <form asp-action="ToggleStatus" asp-route-id="@item.ItemID" method="post" style="display: inline;">
+                                                <button type="submit" class="btn btn-sm @(item.Status == "Available" ? "btn-outline-warning" : "btn-outline-success")">
+                                                    <i class="fas fa-toggle-on"></i>
+                                                </button>
+                                            </form>
                                             <a href="/Menu/Delete/@item.ItemID" class="btn btn-sm btn-outline-danger">
                                                 <i class="fas fa-trash"></i>
                                             </a>

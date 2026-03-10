@@ -197,6 +197,29 @@ namespace RestaurantManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Menu/ToggleStatus/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var menuItem = await _context.MenuItems.FindAsync(id);
+            if (menuItem != null)
+            {
+                try
+                {
+                    // Toggle status between Available and Not Available
+                    menuItem.Status = menuItem.Status == "Available" ? "Not Available" : "Available";
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = $"Menu item status changed to {menuItem.Status}!";
+                }
+                catch (Exception ex)
+                {
+                    TempData["Error"] = "Unable to change menu item status. Please try again.";
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool MenuItemExists(int id)
         {
             return _context.MenuItems.Any(e => e.ItemID == id);
