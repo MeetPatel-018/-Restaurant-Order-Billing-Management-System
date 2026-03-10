@@ -9,10 +9,12 @@ namespace RestaurantManagementSystem.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<AdminController> _logger;
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context, ILogger<AdminController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Admin
@@ -25,32 +27,42 @@ namespace RestaurantManagementSystem.Controllers
         // GET: Admin/Dashboard
         public async Task<IActionResult> Dashboard()
         {
-            var viewModel = new DashboardViewModel
+            try
             {
-                TotalMenuItems = await _context.MenuItems.CountAsync(),
-                TotalOrders = await _context.Orders.CountAsync(),
-                TotalSales = await _context.Bills.SumAsync(b => b.FinalAmount),
-                TodayOrders = await _context.Orders
-                    .Where(o => o.OrderDate.Date == DateTime.Today)
-                    .CountAsync(),
-                AvailableTables = await _context.Tables
-                    .Where(t => t.Status == "Available")
-                    .CountAsync(),
-                OccupiedTables = await _context.Tables
-                    .Where(t => t.Status == "Occupied")
-                    .CountAsync(),
-                TodaySales = await _context.Bills
-                    .Where(b => b.BillDate.Date == DateTime.Today)
-                    .SumAsync(b => b.FinalAmount),
-                RecentOrders = await _context.Orders
-                    .Include(o => o.Table)
-                    .Include(o => o.OrderItems)
-                    .OrderByDescending(o => o.OrderDate)
-                    .Take(5)
-                    .ToListAsync()
-            };
+                var viewModel = new DashboardViewModel
+                {
+                    TotalMenuItems = await _context.MenuItems.CountAsync(),
+                    TotalOrders = await _context.Orders.CountAsync(),
+                    TotalSales = await _context.Bills.SumAsync(b => b.FinalAmount),
+                    TodayOrders = await _context.Orders
+                        .Where(o => o.OrderDate.Date == DateTime.Today)
+                        .CountAsync(),
+                    AvailableTables = await _context.Tables
+                        .Where(t => t.Status == "Available")
+                        .CountAsync(),
+                    OccupiedTables = await _context.Tables
+                        .Where(t => t.Status == "Occupied")
+                        .CountAsync(),
+                    TodaySales = await _context.Bills
+                        .Where(b => b.BillDate.Date == DateTime.Today)
+                        .SumAsync(b => b.FinalAmount),
+                    RecentOrders = await _context.Orders
+                        .Include(o => o.Table)
+                        .Include(o => o.OrderItems)
+                        .ThenInclude(oi => oi.MenuItem)
+                        .OrderByDescending(o => o.OrderDate)
+                        .Take(5)
+                        .ToListAsync()
+                };
 
-            return View(viewModel);
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading dashboard data");
+                TempData["Error"] = "Unable to load dashboard data. Please try again.";
+                return View(new DashboardViewModel());
+            }
         }
 
         // GET: Admin/CreateMenuItem
@@ -76,6 +88,7 @@ namespace RestaurantManagementSystem.Controllers
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error creating menu item");
                     ModelState.AddModelError("", "Unable to create menu item. Please try again.");
                 }
             }
@@ -166,6 +179,7 @@ namespace RestaurantManagementSystem.Controllers
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error creating order");
                     ModelState.AddModelError("", "Unable to create order. Please try again.");
                 }
             }

@@ -255,3 +255,4 @@ D:\Restaurant Order & Billing Management System\RestaurantManagementSystem\obj\D
 D:\Restaurant Order & Billing Management System\RestaurantManagementSystem\obj\Debug\net6.0\RestaurantManagementSystem.pdb
 D:\Restaurant Order & Billing Management System\RestaurantManagementSystem\obj\Debug\net6.0\RestaurantManagementSystem.genruntimeconfig.cache
 D:\Restaurant Order & Billing Management System\RestaurantManagementSystem\obj\Debug\net6.0\ref\RestaurantManagementSystem.dll
+D:\Restaurant Order & Billing Management System\RestaurantManagementSystem\obj\Debug\net6.0\RestaurantManagementSystem.sourcelink.json

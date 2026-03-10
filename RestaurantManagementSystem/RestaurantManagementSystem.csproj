@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <NoWarn>$(NoWarn);CS8602;CS8604;CS0168;CS8618</NoWarn>
+    <NoWarn>$(NoWarn);CS8602;CS8604;CS0168;CS8618;NETSDK1138</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

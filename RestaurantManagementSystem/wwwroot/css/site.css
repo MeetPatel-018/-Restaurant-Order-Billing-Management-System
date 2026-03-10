@@ -103,7 +103,7 @@ body {
 
 #sidebar ul li a:hover {
     color: #fff;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     border-left-color: var(--accent-color);
     padding-left: 25px;
 }
@@ -111,7 +111,7 @@ body {
 #sidebar ul li.active > a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.2);
     border-left-color: var(--secondary-color);
 }
 
@@ -274,18 +274,12 @@ a[aria-expanded="true"] {
     border-top: none;
 }
 
-.btn-group .btn {
-    margin-right: 5px;
-}
 
-.alert {
-    border: none;
-    border-radius: 6px;
-}
 
 .form-control:focus {
-    border-color: #17a2b8;
-    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    background: white;
 }
 
 .sidebar-collapse {
@@ -295,13 +289,37 @@ a[aria-expanded="true"] {
 /* Dashboard Cards */
 .dashboard-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    color: #ffffff;
     border-radius: 20px;
     padding: 30px;
     margin-bottom: 25px;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+}
+
+.dashboard-card.success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.dashboard-card.danger {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.dashboard-card.info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.dashboard-card.warning {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.dashboard-card.secondary {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.dashboard-card.dark {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
 }
 
 .dashboard-card::before {
@@ -387,11 +405,6 @@ a[aria-expanded="true"] {
     background: rgba(255, 255, 255, 0.9);
 }
 
-.form-control:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
-    background: white;
-}
 
 .form-label {
     font-weight: 600;
@@ -415,6 +428,7 @@ a[aria-expanded="true"] {
     background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
     color: #ffffff;
     border: 1px solid #20c997;
+    font-weight: 700;
 }
 
 .status-occupied {
@@ -433,6 +447,7 @@ a[aria-expanded="true"] {
     background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%);
     color: #ffffff;
     border: 1px solid #007bff;
+    font-weight: 700;
 }
 
 .status-cancelled {
@@ -441,7 +456,71 @@ a[aria-expanded="true"] {
     border: 1px solid #6c757d;
 }
 
-/* Ensure Bootstrap 5 badge colors work properly */
+/* Enhanced Button Styles */
+.btn-teal {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    border: none;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+}
+
+.btn-teal:hover {
+    background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
+    color: #ffffff;
+}
+
+/* Loading States */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Enhanced Form Validation */
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+    background-image: none;
+}
+
+.form-control.is-valid {
+    border-color: var(--success-color);
+    background-image: none;
+}
+
+.invalid-feedback {
+    color: var(--danger-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.valid-feedback {
+    color: var(--success-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
 .badge.bg-success {
     background-color: #28a745 !important;
     color: #ffffff !important;
@@ -455,9 +534,10 @@ a[aria-expanded="true"] {
 .badge.bg-danger {
     background-color: #dc3545 !important;
     color: #ffffff !important;
+    font-weight: 700;
 }
 
-/* Alert Styles */
+/* Enhanced Alert Styles */
 .alert {
     border-radius: 15px;
     border: none;
@@ -490,7 +570,7 @@ a[aria-expanded="true"] {
     border-left: 4px solid #17a2b2;
 }
 
-/* Button Group */
+/* Enhanced Button Group */
 .btn-group .btn {
     margin-right: 8px;
     border-radius: 8px;

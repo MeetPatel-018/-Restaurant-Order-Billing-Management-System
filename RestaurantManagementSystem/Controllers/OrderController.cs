@@ -10,22 +10,33 @@ namespace RestaurantManagementSystem.Controllers
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<OrderController> _logger;
 
-        public OrderController(ApplicationDbContext context)
+        public OrderController(ApplicationDbContext context, ILogger<OrderController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Order
         public async Task<IActionResult> Index()
         {
-            var orders = await _context.Orders
-                .Include(o => o.Table)
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.MenuItem)
-                .OrderByDescending(o => o.OrderDate)
-                .ToListAsync();
-            return View(orders);
+            try
+            {
+                var orders = await _context.Orders
+                    .Include(o => o.Table)
+                    .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.MenuItem)
+                    .OrderByDescending(o => o.OrderDate)
+                    .ToListAsync();
+                return View(orders);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading orders");
+                TempData["Error"] = "Unable to load orders. Please try again.";
+                return View(new List<Order>());
+            }
         }
 
         // GET: Order/Details/5
@@ -160,7 +171,7 @@ namespace RestaurantManagementSystem.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Log error (in production, use proper logging)
+                    _logger.LogError(ex, "Error creating order");
                     ModelState.AddModelError("", "Unable to create order. Please try again.");
                 }
             }
@@ -269,6 +280,7 @@ namespace RestaurantManagementSystem.Controllers
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error updating order with ID: {OrderId}", id);
                     ModelState.AddModelError("", "Unable to update order. Please try again.");
                 }
             }
@@ -353,6 +365,7 @@ namespace RestaurantManagementSystem.Controllers
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error deleting order with ID: {OrderId}", id);
                     TempData["Error"] = "Unable to delete order. Please try again.";
                 }
             }

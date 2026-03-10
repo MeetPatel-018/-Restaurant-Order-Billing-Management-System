@@ -16,6 +16,9 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add<GlobalExceptionFilter>();
 });
 
+// Register the GlobalExceptionFilter
+builder.Services.AddScoped<GlobalExceptionFilter>();
+
 // Configure MySQL connection with connection pooling
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -49,7 +52,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 // Configure URLs to avoid port conflicts
-var urls = "http://localhost:5005";
+var urls = "http://localhost:5006";
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
